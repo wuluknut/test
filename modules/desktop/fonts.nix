@@ -9,16 +9,8 @@ let
   cfg = config.wuOptions.desktop;
 in
 {
-  options.wuOptions.desktop = {
-    fonts.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable font specific configurations";
-    };
-  };
-
   config = lib.mkIf cfg.enable {
-    fonts = lib.mkIf cfg.fonts.enable {
+    fonts = {
       packages = with pkgs; [
         noto-fonts
         noto-fonts-emoji
