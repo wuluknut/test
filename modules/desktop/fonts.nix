@@ -9,64 +9,39 @@ let
   cfg = config.wuOptions.desktop;
 in
 {
-  config = lib.mkIf cfg.enable {
-    fonts = {
-      packages = with pkgs; [
-        noto-fonts
-        noto-fonts-emoji
-        noto-fonts-cjk-sans
-        noto-fonts-cjk-serif
+  config.fonts = lib.mkIf cfg.enable {
+    packages = with pkgs; [
+      noto-fonts
+      noto-fonts-emoji
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
 
-        font-awesome
-        sarasa-gothic
+      font-awesome
+      sarasa-gothic
 
-        nerd-fonts.meslo-lg
-        nerd-fonts.symbols-only
-        nerd-fonts.jetbrains-mono
-      ];
-      fontconfig = {
-        enable = true;
-        defaultFonts = {
-          emoji = [
-            "Noto Color Emoji"
-          ];
-          monospace = [
-            "JetBrainsMono Nerd Font"
-            "Symbols Nerd Font"
-            "Sarasa Mono SC"
-          ];
-          sansSerif = [
-            "Noto Sans CJK SC"
-            "DejaVu Sans"
-          ];
-          serif = [
-            "Noto Serif CJK SC"
-            "DejaVu Serif"
-          ];
-        };
-      };
-    };
+      nerd-fonts.meslo-lg
+      nerd-fonts.symbols-only
+      nerd-fonts.jetbrains-mono
+    ];
 
-    i18n = {
-      extraLocaleSettings = {
-        LC_ADDRESS = "zh_CN.UTF-8";
-        LC_IDENTIFICATION = "zh_CN.UTF-8";
-        LC_MEASUREMENT = "zh_CN.UTF-8";
-        LC_MONETARY = "zh_CN.UTF-8";
-        LC_NAME = "zh_CN.UTF-8";
-        LC_NUMERIC = "zh_CN.UTF-8";
-        LC_PAPER = "zh_CN.UTF-8";
-        LC_TELEPHONE = "zh_CN.UTF-8";
-        LC_TIME = "zh_CN.UTF-8";
-      };
-
-      inputMethod = {
-        enable = true;
-        type = "fcitx5";
-        fcitx5.addons = with pkgs; [
-          fcitx5-qt
-          fcitx5-gtk
-          fcitx5-rime
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        emoji = [
+          "Noto Color Emoji"
+        ];
+        monospace = [
+          "JetBrainsMono Nerd Font"
+          "Symbols Nerd Font"
+          "Sarasa Mono SC"
+        ];
+        sansSerif = [
+          "Noto Sans CJK SC"
+          "DejaVu Sans"
+        ];
+        serif = [
+          "Noto Serif CJK SC"
+          "DejaVu Serif"
         ];
       };
     };
