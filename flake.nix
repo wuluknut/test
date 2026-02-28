@@ -1,30 +1,53 @@
 {
   description = "NixOS configuration of Wulu Knut";
 
+  nixConfig = {
+    extra-substituters = [
+      "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "git+https://mirrors.tuna.tsinghua.edu.cn/git/nixpkgs.git?ref=nixos-unstable";
+
+    nix-hardware.url = "github:NixOS/nix-hardware/master";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./configuration.nix
+  outputs =
+    { self, nixpkgs, ... }@inputs:
 
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
+    let
+      wulib = import ./libs { inherit (nixpkgs) lib; };
+    in
+    {
+      nixosConfigurations = {
+        qemu = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
 
-          home-manager.users.wuluknut = import ./home.nix;
-        }
-      ];
+          specialArgs = { inherit inputs wulib; };
+
+          modules = [
+            {
+              networking.hostName = "qemu";
+            }
+
+            ./hosts/qemu
+
+            ./modules
+
+            ./users
+          ];
+        };
+      };
     };
-  };
 }
